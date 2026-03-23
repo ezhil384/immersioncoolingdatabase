@@ -1,0 +1,7 @@
+# Exclude specific folders
+outputs/
+folder_name_2/
+
+# Exclude environment files or large data
+__pycache__/
+*.xml

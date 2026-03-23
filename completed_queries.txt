@@ -1,0 +1,7 @@
+vitrimer
+\"data center\" OR \"server cooling\" OR \"electronic cooling\" OR \"power electronics\" OR \"thermal management\"
+\"dielectric strength\" OR \"dielectric constant\" OR \"electrical insulation\" OR \"resistivity\" OR \"dielectric breakdown\" OR \"dielectric dissipation factor\"
+\"synthetic hydrocarbons\" OR \"PAO\" OR \"GTL\" OR \"synthetic esters\" OR \"natural esters\"
+\"biobased hydrocarbons\" OR \"perfluorocarbons\" OR \"PFPE\" OR \"fluoroketones\" OR \"HFO\" OR \"fluorochemicals\"
+(\"polyurethane\" OR \"polysulfides\" OR \"polysiloxanes\") AND (\"dielectric\" OR \"thermal conductivity\" OR \"viscosity\")
+(\"polyanhydrides\" OR \"recyclable polymer\" OR \"boronic ester\") AND (\"dielectric\" OR \"thermal conductivity\" OR \"viscosity\")
