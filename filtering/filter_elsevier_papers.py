@@ -16,7 +16,7 @@ def filter_and_flatten_xml(base_source_dir, base_target_dir, keywords):
     print(f"Flattening and filtering files from: {base_source_dir}")
 
     for root, dirs, files in os.walk(base_source_dir):
-        xml_files = [f for f in files if f.endswith('.html')]
+        xml_files = [f for f in files if f.endswith('.html') or f.endswith('.xml')]
         
         for filename in xml_files:
             target_path = os.path.join(base_target_dir, filename)
@@ -48,5 +48,5 @@ def filter_and_flatten_xml(base_source_dir, base_target_dir, keywords):
 
 
 # Usage
-MY_KEYWORDS = ["thermal conductivity", "viscosity", "dielectric constant", "dielectric strength", "immersion cooling","cooling performance","server cooling","data center","organic fluid","dielectric fluid","coolant","heat transfer fluid","electrical insulation","dielectric breakdown","dielectric dissipation factor"]
-filter_and_flatten_xml("../data/rsc_paper/organic_liquid", "../data/filtered_rsc_test", MY_KEYWORDS)
+MY_KEYWORDS = ["thermal conductivity", "viscosity", "dielectric constant", "dielectric strength", "immersion cooling","cooling performance","server cooling","Direct Liquid Cooling", "Transformer Oils","Submerged Cooling","data center","organic fluid","dielectric fluid","coolant","heat transfer fluid","electrical insulation","dielectric breakdown","dielectric dissipation factor"]
+filter_and_flatten_xml("../data/elsevier_papers", "../data/filtered_elsevier", MY_KEYWORDS)
