@@ -39,9 +39,9 @@ import shutil
 # ---------------------------------------------------------------------------
 ROOT_DIR        = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 BASE_SOURCE_DIR = os.path.join(ROOT_DIR, "data")
-BASE_TARGET_DIR = os.path.join(ROOT_DIR, "rsc_filtered")
-TITLES_JSON     = os.path.join(ROOT_DIR, "rsc_filtered", "rsc_titles.json")
-TITLES_TXT      = os.path.join(ROOT_DIR, "rsc_filtered", "rsc_titles.txt")
+BASE_TARGET_DIR = os.path.join(ROOT_DIR, "data/rsc_filtered")
+TITLES_JSON     = os.path.join(ROOT_DIR, "data/rsc_filtered", "rsc_titles.json")
+TITLES_TXT      = os.path.join(ROOT_DIR, "data/rsc_filtered", "rsc_titles.txt")
 
 MY_KEYWORDS = [
     # Properties (first 4)
@@ -49,7 +49,8 @@ MY_KEYWORDS = [
     "viscosity",
     "dielectric constant",
     "dielectric strength",
-    "relative permittivity"
+    "relative permittivity",
+    "flash point",
     # Applications (remainder)
     "immersion cooling",
     "cooling performance",
@@ -58,8 +59,13 @@ MY_KEYWORDS = [
     "esters",
     "polyurethane",
     "polymer",
-    "organic fluid",
+    " organic",
+    "dielectric liquid",
+    "coolant",
     "dielectric fluid",
+    "mineral oil",
+    "silicone oil",
+    "submersion cooling",
     "heat transfer fluid",
     "electrical insulation",
     "dielectric breakdown",
@@ -67,8 +73,8 @@ MY_KEYWORDS = [
     "phase cooling"
 ]
 
-PROPERTY_KEYWORDS     = [k.lower() for k in MY_KEYWORDS[:4]]
-APPLICATION_KEYWORDS  = [k.lower() for k in MY_KEYWORDS[4:]]
+PROPERTY_KEYWORDS     = [k.lower() for k in MY_KEYWORDS[:6]]
+APPLICATION_KEYWORDS  = [k.lower() for k in MY_KEYWORDS[6:]]
 
 
 # ---------------------------------------------------------------------------

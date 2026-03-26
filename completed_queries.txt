@@ -5,3 +5,16 @@ vitrimer
 \"biobased hydrocarbons\" OR \"perfluorocarbons\" OR \"PFPE\" OR \"fluoroketones\" OR \"HFO\" OR \"fluorochemicals\"
 (\"polyurethane\" OR \"polysulfides\" OR \"polysiloxanes\") AND (\"dielectric\" OR \"thermal conductivity\" OR \"viscosity\")
 (\"polyanhydrides\" OR \"recyclable polymer\" OR \"boronic ester\") AND (\"dielectric\" OR \"thermal conductivity\" OR \"viscosity\")
+(\"organic liquid\") AND (\"thermal conductivity\" OR \"dielectric constant\" OR viscosity)
+\"thermal conductivity\" AND (\"flash point\" OR \"fire point\") AND fluid
+(\"synthetic hydrocarbons\" OR PAO OR GTL OR esters) AND (\"thermal conductivity\" OR \"dielectric constant\")
+(\"dielectric fluid\" OR \"heat transfer fluid\") AND (\"dielectric constant\" OR \"dielectric strength\")
+(\"biobased hydrocarbons\" OR \"natural esters\") AND (\"thermal conductivity\" OR \"dielectric constant\" OR \"flash point\")
+(perfluorocarbons OR PFPE OR fluoroketones OR HFO) AND (viscosity OR \"dielectric constant\")
+(\"thermal management\" OR \"cooling performance\") AND (viscosity OR \"dielectric constant\" OR \"thermal conductivity\")
+(polyurethane OR polysulfides OR \"polysiloxanes\") AND (dielectric OR \"thermal conductivity\" OR viscosity)
+(polyanhydrides OR \"recyclable polymer\" OR \"boronic ester\") AND (dielectric OR \"thermal conductivity\" OR viscosity)
+("dielectric liquid" OR "immersion coolant" OR "heat transfer fluid") AND ("organic")
+(\"dielectric liquid\" OR \"dielectric fluid\" OR \"immersion coolant\" OR \"heat transfer fluid\") AND (\"organic\")
+(\"silicone oil\" OR \"mineral oil\" OR \"ionic liquid\" OR \"ionic fluid\") AND (\"thermal conductivity\" OR dielectric OR viscosity)
+(\"Direct Liquid Cooling\" OR \"Transformer Oils\" OR \"Submerged Cooling\") AND (\"thermal conductivity\" OR dielectric OR viscosity)

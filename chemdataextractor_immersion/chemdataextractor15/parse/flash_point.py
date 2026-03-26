@@ -75,7 +75,7 @@ fp_and_units = (
     units +
     Optional(rbrct).hide())('fp')
 
-fp_specifier_and_value = Optional(prefix) + (Optional(delim).hide() + Optional(lbrct | I('[')).hide() + fp + units + Optional(rbrct | I(']')).hide())('fp')
+fp_specifier_and_value = prefix + (Optional(delim).hide() + Optional(lbrct | I('[')).hide() + fp + units + Optional(rbrct | I(']')).hide())('fp')
 
 prefix_cem_value = (
     prefix +
@@ -89,7 +89,7 @@ prefix_cem_value = (
         I('in') + I('the') + I('range') + I('of') | I('ranging') + I('from') | I('as') | I('to') | I('to') +
         I('be') | I('about') | I('over') | (I('higher') | I('lower')) + I('than') | I('above')).hide() +
     Optional(lbrct).hide() +
-    (fp_specifier_and_value | fp_and_units) +
+    fp_specifier_and_value +
     Optional(rbrct).hide())('fp_phrase')
 
 cem_prefix_value = (
@@ -97,25 +97,23 @@ cem_prefix_value = (
     + Optional(delim).hide()
     + Optional(I('that') | I('which') | I('was') | I('since') | I('the') | I('resulting') + I('in')).hide()
     + Optional(I('typically') | I('also')).hide()
-    + Optional(prefix)
     + Optional(I('display') | I('displays') | I('exhibit') | I('exhibited') | I('exhibits') | I('exhibiting') | I('shows') | I('show') | I('showed') | I('gave') | I('demonstrate') | I('demonstrates') | I('are') | I('remains') | I('maintains') | I('delivered') | I('provided') |
                I('undergo') | I('undergoes') | I('has') | I('have') | I('having') | I('determined') | I('with') | I('where') | I('orders') | I('were') | (I('is') + Optional(I('classified') + I('as')))).hide()
     + Optional((I('reported') + I('to') + I('have')) | I('at') | I('with')).hide()
-    + Optional(lbrct).hide() + (fp_specifier_and_value | fp_and_units) + Optional(rbrct).hide()
+    + Optional(lbrct).hide() + fp_specifier_and_value + Optional(rbrct).hide()
     + Optional(I('can') + I('be') + I('achieved'))
 )('fp_phrase')
 
 prefix_value_cem = (
     Optional(I('below') | I('at')).hide() +
-    Optional(prefix) +
     Optional(I('is') | I('were') | I('was') | I('are')).hide() +
-    SkipTo(fp_specifier_and_value | fp_and_units) +
-    (fp_specifier_and_value | fp_and_units) +
+    SkipTo(fp_specifier_and_value) +
+    fp_specifier_and_value +
     Optional(
         Optional(I('has') + I('been') + I('found')) +
         Optional(I('is') | I('were') | I('was') | I('are')) +
         Optional(I('observed') | I('determined') | I('measured') | I('calculated') | I('reported'))).hide() +
-    Optional(fp_specifier_and_value | fp_and_units) +
+    Optional(fp_specifier_and_value) +
     Optional(I('in') | I('for') | I('of')).hide() +
     Optional(I('the')).hide() +
     Optional(R('^[:;,]$')).hide() +
@@ -126,7 +124,7 @@ prefix_value_cem = (
     Optional(rbrct).hide())('fp_phrase')
 
 value_prefix_cem = (Optional(I('of')) +
-                    (fp_specifier_and_value | fp_and_units) +
+                    fp_specifier_and_value +
                     Optional(delim).hide() +
                     Optional(I('which') | I('that')).hide() +
                     Optional(I('has') + I('been') | I('was') | I('is') | I('were')).hide() +
@@ -149,7 +147,7 @@ cem_value_prefix = ((multi_cem | cem_prefix | lenient_chemical_label)
                     + Optional(W('=') | W('~') | W('≈') | W('≃') | I('was') | I('is') | I('at') | I('as') | I('near') | I('above') | I('below')).hide()
                     + Optional(I('in') + I('the') + I('range') | I('ranging')).hide()
                     + Optional(I('of') | I('about') | I('from') | I('approximately') | I('around') | (I('high') + I('as')) | (I('higher') | I('lower') + I('than'))).hide()
-                    + (fp_specifier_and_value | fp_and_units)
+                    + fp_specifier_and_value
                     + Optional(I('as') | I('of') | I('for')).hide()
                     + Optional(I('its') | I('their') | I('the')).hide() + fp_specifier)('fp_phrase')
 

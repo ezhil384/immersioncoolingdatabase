@@ -13,6 +13,6 @@ def get_file_index(directory_path, target_filename):
         return "File not found in the directory."
 
 # Example:
-folder_path = '../data/rsc_articles'
-target = '10.1039_d5mh01385b.html'
+folder_path = 'data/rsc_articles'
+target = '10.1039_c4cs00144c.html'
 print(f"The index is: {get_file_index(folder_path, target)}")

@@ -62,19 +62,19 @@ def collect_article_html(source_root: Path, output_dir: Path) -> tuple[int, int,
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Read category/DOI folders under rsc_filtered and copy each article.html "
+            "Read category/DOI folders under data/rsc_filtered and copy each article.html "
             "to a single output folder as doi.html"
         )
     )
     parser.add_argument(
         "--source",
-        default="rsc_filtered",
-        help="Path to the root folder that contains category folders (default: rsc_filtered)",
+        default="data/rsc_filtered",
+        help="Path to the root folder that contains category folders (default: data/rsc_filtered)",
     )
     parser.add_argument(
         "--output",
-        default="rsc_articles",
-        help="Destination folder for DOI HTML files (default: rsc_articles)",
+        default="data/rsc_articles",
+        help="Destination folder for DOI HTML files (default: data/rsc_articles)",
     )
     return parser.parse_args()
 

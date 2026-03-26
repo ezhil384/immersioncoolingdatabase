@@ -78,7 +78,7 @@ log = logging.getLogger(__name__)
 DEFAULT_KEYWORDS_FILE = os.path.join(ROOT_DIR, "keywords.txt")
 DEFAULT_OUTPUT_DIR    = os.path.join(ROOT_DIR, "data")
 DEFAULT_PAGE_START    = int(os.environ.get("PAGE_START", 1))
-DEFAULT_PAGE_END      = int(os.environ.get("PAGE_END",   10))
+DEFAULT_PAGE_END      = int(os.environ.get("PAGE_END",   20))
 SEARCH_DELAY_S        = float(os.environ.get("SEARCH_DELAY", 2.0))
 DOWNLOAD_DELAY_S      = float(os.environ.get("DOWNLOAD_DELAY", 1.5))
 
@@ -102,6 +102,31 @@ def _build_driver() -> webdriver.Chrome:
 def _safe_name(doi: str) -> str:
     """Convert a DOI into a filesystem-safe string."""
     return doi.replace("/", "_").replace(":", "_").replace(" ", "_")
+
+
+def _build_downloaded_dois(output_dir: str) -> set[str]:
+    """Return safe DOI names already present as subfolders under any query folder in output_dir."""
+    downloaded: set[str] = set()
+    if not os.path.isdir(output_dir):
+        return downloaded
+    for query_folder in os.scandir(output_dir):
+        if not query_folder.is_dir():
+            continue
+        for doi_folder in os.scandir(query_folder.path):
+            if doi_folder.is_dir():
+                downloaded.add(doi_folder.name)
+    return downloaded
+
+
+def _build_filtered_dois(filtered_dir: str) -> set[str]:
+    """Return safe DOI stems already present as .html files under filtered_dir."""
+    filtered: set[str] = set()
+    if not os.path.isdir(filtered_dir):
+        return filtered
+    for entry in os.scandir(filtered_dir):
+        if entry.is_file() and entry.name.endswith(".html"):
+            filtered.add(entry.name[:-5])  # strip .html suffix
+    return filtered
 
 
 def _query_folder_name(query: str) -> str:
@@ -238,6 +263,8 @@ def process_articles(
     html_scraper: RscHtmlScraper,
     output_dir: str,
     query_folder: str,
+    downloaded_dois: set[str],
+    filtered_dois: set[str],
 ) -> None:
     """
     For each article in *search_results*:
@@ -245,25 +272,41 @@ def process_articles(
       - Scrape full metadata with RscHtmlScraper
       - Download raw HTML
       - Write <output_dir>/<query_folder>/<safe_doi>/article.html and metadata.json
+
+    Skips DOIs already present in any query subfolder of output_dir or in filtered_dois.
+    Prints per-query skip/download statistics on completion.
     """
     total = len(search_results)
+    skipped_existing = 0   # already in another query folder or this one
+    skipped_filtered = 0   # already in filtered_rsc
+    downloaded = 0
+
     for idx, article in enumerate(search_results, start=1):
         doi      = article.get("doi", "")
         html_url = article.get("html_url", "")
 
         if not doi:
             log.warning("Skipping result with no DOI: %s", article)
+            total -= 1
             continue
 
         safe = _safe_name(doi)
+
+        # Skip if already present in filtered_rsc
+        if safe in filtered_dois:
+            log.info("  [%d/%d] In filtered_rsc, skipping: %s", idx, total, doi)
+            skipped_filtered += 1
+            continue
+
+        # Skip if already downloaded under any query folder
+        if safe in downloaded_dois:
+            log.info("  [%d/%d] Already downloaded, skipping: %s", idx, total, doi)
+            skipped_existing += 1
+            continue
+
         article_dir = os.path.join(output_dir, query_folder, safe)
         html_path   = os.path.join(article_dir, "article.html")
         meta_path   = os.path.join(article_dir, "metadata.json")
-
-        # Skip if both files already exist
-        if os.path.exists(html_path) and os.path.exists(meta_path):
-            log.info("  [%d/%d] Already done: %s", idx, total, doi)
-            continue
 
         log.info("  [%d/%d] Processing: %s", idx, total, doi)
         os.makedirs(article_dir, exist_ok=True)
@@ -290,8 +333,17 @@ def process_articles(
                 with open(html_path, "wb") as fh:
                     fh.write(raw)
                 log.debug("  HTML written: %s", html_path)
+                downloaded_dois.add(safe)
+                downloaded += 1
 
         time.sleep(DOWNLOAD_DELAY_S)
+
+    skipped_total = skipped_existing + skipped_filtered
+    log.info(
+        "  Query stats — total: %d | downloaded: %d | skipped: %d "
+        "(already downloaded: %d, in filtered_rsc: %d)",
+        total, downloaded, skipped_total, skipped_existing, skipped_filtered,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -319,6 +371,15 @@ def run(
     os.makedirs(output_dir, exist_ok=True)
     page_range = range(page_start, page_end + 1)
 
+    # Build skip sets once before the query loop
+    downloaded_dois = _build_downloaded_dois(output_dir)
+    filtered_dir    = os.path.join("../data", "filtered_rsc")
+    filtered_dois   = _build_filtered_dois(filtered_dir)
+    log.info(
+        "Pre-scan: %d DOIs already downloaded, %d in filtered_rsc — these will be skipped.",
+        len(downloaded_dois), len(filtered_dois),
+    )
+
     driver       = _build_driver()
     html_scraper = RscHtmlScraper()
 
@@ -331,12 +392,15 @@ def run(
                      q_idx, len(queries), query, page_start, page_end)
             log.info("=" * 60)
 
-            search_results = search_query(search_scraper, query, page_range,driver)
+            search_results = search_query(search_scraper, query, page_range, driver)
             log.info("Found %d unique articles for '%s'.", len(search_results), query)
 
             if search_results:
                 query_folder = _query_folder_name(query)
-                process_articles(search_results, html_scraper, output_dir, query_folder)
+                process_articles(
+                    search_results, html_scraper, output_dir, query_folder,
+                    downloaded_dois, filtered_dois,
+                )
 
     finally:
         driver.quit()

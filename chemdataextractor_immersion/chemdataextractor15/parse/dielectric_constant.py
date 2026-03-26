@@ -99,7 +99,7 @@ dc_and_value = (
     Optional(rbrct).hide())('dc')
 
 dc_specifier_and_value = (
-    Optional(prefix) +
+    prefix +
     (Optional(delim).hide() +
      Optional(lbrct | I('[')).hide() +
      dc +
@@ -120,7 +120,7 @@ prefix_cem_value = (
         I('in') + I('the') + I('range') + I('of') | I('ranging') + I('from') | I('as') | I('to') |
         I('to') + I('be') | I('about') | I('over') | (I('higher') | I('lower')) + I('than') | I('above')).hide() +
     Optional(lbrct).hide() +
-    (dc_specifier_and_value | dc_and_value) +
+    dc_specifier_and_value +
     Optional(rbrct).hide())('dc_phrase')
 
 cem_prefix_value = (
@@ -137,7 +137,7 @@ cem_prefix_value = (
                (I('is') + Optional(I('classified') + I('as')))).hide()
     + Optional((I('reported') + I('to') + I('have')) | I('at') | I('with')).hide()
     + Optional(lbrct).hide()
-    + (dc_specifier_and_value | dc_and_value)
+    + dc_specifier_and_value
     + Optional(rbrct).hide()
     + Optional(I('can') + I('be') + I('achieved'))
 )('dc_phrase')
@@ -146,13 +146,13 @@ prefix_value_cem = (
     Optional(I('below') | I('at')).hide() +
     Optional(prefix) +
     Optional(I('is') | I('were') | I('was') | I('are')).hide() +
-    SkipTo(dc_specifier_and_value | dc_and_value) +
-    (dc_specifier_and_value | dc_and_value) +
+    SkipTo(dc_specifier_and_value) +
+    dc_specifier_and_value +
     Optional(
         Optional(I('has') + I('been') + I('found')) +
         Optional(I('is') | I('were') | I('was') | I('are')) +
         Optional(I('observed') | I('determined') | I('measured') | I('calculated') | I('reported'))).hide() +
-    Optional(dc_specifier_and_value | dc_and_value) +
+    Optional(dc_specifier_and_value) +
     Optional(I('in') | I('for') | I('of')).hide() +
     Optional(I('the')).hide() +
     Optional(R(r'^[:;,]$')).hide() +
@@ -164,7 +164,7 @@ prefix_value_cem = (
 
 value_prefix_cem = (
     Optional(I('of')) +
-    (dc_specifier_and_value | dc_and_value) +
+    dc_specifier_and_value +
     Optional(delim).hide() +
     Optional(I('which') | I('that')).hide() +
     Optional(I('has') + I('been') | I('was') | I('is') | I('were')).hide() +
@@ -195,7 +195,7 @@ cem_value_prefix = (
     + Optional(I('in') + I('the') + I('range') | I('ranging')).hide()
     + Optional(I('of') | I('about') | I('from') | I('approximately') | I('around') |
                (I('high') + I('as')) | (I('higher') | I('lower') + I('than'))).hide()
-    + (dc_specifier_and_value | dc_and_value)
+    + dc_specifier_and_value
     + Optional(I('as') | I('of') | I('for')).hide()
     + Optional(I('its') | I('their') | I('the')).hide()
     + dc_specifier)('dc_phrase')

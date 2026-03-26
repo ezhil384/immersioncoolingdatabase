@@ -23,9 +23,18 @@ log = logging.getLogger(__name__)
 delim = R(r'^[:;\.,]$')
 
 units = (
+    # Dynamic viscosity units
     R(r'^m?Pa[·\*]?s$') |
     (R(r'^m?Pa$') + Optional(W('·') | W('*') | W('⋅')) + R(r'^s$')) |
-    R(r'^c?P$')
+    R(r'^c?P$') |
+    # Kinematic viscosity units — single-token forms
+    R(r'^cSt$') |
+    R(r'^St$') |
+    R(r'^mm[²2]\/s$') |
+    R(r'^mm[²2]s[\-−]1$') |
+    # Kinematic viscosity units — tokenized forms (mm² / s)
+    (R(r'^mm[²2]$') + W('/') + W('s')) |
+    (R(r'^mm[²2]$') + R(r'^s[\-−]1$'))
 )('units').add_action(merge)
 
 joined_range = R(r'^[\+\-–−]?\d+(\.\\d+)?(\(\d\))?[\-––-−~∼˜]\d+(\.\d+)?(\(\d\))?$')('value').add_action(join)
